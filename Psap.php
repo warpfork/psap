@@ -141,7 +141,6 @@ class PSAP {
 						$gathering = $key;
 					else
 						$this->acceptValue($key, substr($arg, $split+1));
-					//TODO
 					break;
 				case PSAP::$TSHORT:
 					$headkey = FALSE;
