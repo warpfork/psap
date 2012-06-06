@@ -131,6 +131,7 @@ class PSAP {
 		for ($i = 0, $arg = $argv[0]; $i < $argc; $arg = @$argv[++$i]) {
 			switch (PSAP::detectFlag($arg)) {
 				case PSAP::$TLONG:
+					$headkey = FALSE;
 					$split = strpos($arg, "=");
 					$long = ($split===FALSE) ? substr($arg, 2) : substr($arg, 2, $split-2);
 					$key = @$this->lookupLong[$long];
@@ -142,6 +143,7 @@ class PSAP {
 					//TODO
 					break;
 				case PSAP::$TSHORT:
+					$headkey = FALSE;
 					$key = @$this->lookupShort[$arg[1]];
 					if (!$key) { $this->errors[] = "unknown short parameter name '".$arg[1]."'"; continue; }
 					$remainder = substr($arg, 2);
