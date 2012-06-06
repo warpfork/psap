@@ -79,8 +79,8 @@ class PSAP {
 	public function parse($argv) {
 		$this->result = array();
 		$this->errors = array();
-		$headDone = ($this->unflaggedHead == NULL);
-		$tailDone = ($this->unflaggedTail == NULL);
+		$headkey = ($this->unflaggedHead == NULL) ? FALSE : key($this->unflaggedHead);
+		$tailkey = ($this->unflaggedTail == NULL) ? FALSE : key($this->unflaggedTail);
 		
 		// normalize input to an ordinal array, because that just annoys me less.
 		$argv = array_values($argv);
@@ -104,14 +104,11 @@ class PSAP {
 				case PSAP::$TUNFLAG:
 					if ($gathering !== FALSE) {
 						// the last loop found a parameter name but not a value for it, so we expect exactly one blob for that now.
-						acceptValue($gathering, $value);
+						$this->acceptValue($gathering, $arg);
 						$gathering = false;	//XXX: not sure what's more valid behavior here, stopping gathering even if the value was unacceptable or keep trying?  choosing what seems like the less runaway of the two options for now.
-					} else if (!$headDone) {
+					} else if ($headkey !== FALSE) {
 						// there is a leading unflagged head in the config, and it hasn't been filled yet, so this belongs there.
-						if (PSAP::matchesType($this->unflaggedHead['type'], $arg))
-							$this->result[key($this->unflaggedHead)] = $arg;
-						else
-							$this->errors[] = "an unflagged argument did not match the required type";
+						$this->acceptValue($headkey, $arg);
 					} else {
 						
 					}
