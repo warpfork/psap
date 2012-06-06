@@ -167,9 +167,9 @@ class PSAP {
 					} else if ($i > $argc-$nUnfTail) {
 						// we're reached the tail of unflagged args.  (also, we could spin through the rest of the argv array right here if we wanted to, because the rest of the control flow in the loop has become fixed at this point.)
 						if ($tailkey === FALSE)
-							$this->errors[] = ($argc-$i)." trailing values didn't match any parameter and were ignored";
+							{ $this->errors[] = ($argc-$i)." trailing values didn't match any parameter and were ignored"; break 2; }
 						else
-							$this->acceptValue($tailkey, $arg);
+							$this->acceptValue($tailkey, $arg); /* we don't do the same thing with setting tailkey to false as we do with headkey because getting messages about multiple values ignores is actually reasonable here. */
 					} else {
 						// this is just an unexpected chunk of string that's neither a value for a named parameter nor in a place to gather with unflagged values at the head or tail.
 						$this->errors[] = "unexpected value not placed as a value to any parameter";
