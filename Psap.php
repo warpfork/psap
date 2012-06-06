@@ -23,7 +23,7 @@ class PSAP {
 			}
 			if (!isset($def['type'])) $def['type'] = "string";
 			if (!isset($def['required'])) $def['required'] = TRUE;
-			if (!isset($def['multi'])) $def['multi'] = TRUE;
+			if (!isset($def['multi'])) $def['multi'] = FALSE;
 			$this->validateConfigLine($def);
 			$i++;
 		}
