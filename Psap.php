@@ -11,7 +11,7 @@ class PSAP {
 					if (isset($def['longname']) || isset($def['shortname']))
 						throw new Exception("invalid PSAP config: neither longname nor shortname may be specified if parameter is unflagged.");
 					else
-						if ($i == 0) { $this->unflaggedHead = array($key=>$def); } else { $this->unflaggedTail = array($key=>$def); }
+						if ($i == 0) { $this->unflaggedHead = array($key=>$def); } else { $this->unflaggedTail = array($key=>$def); }	//TODO: we're almost certainly going to need to do someting to forbid or triage the case where both head and tail are unflagged and multi, because otherwise that is breakingly ambiguous.
 				} else
 					if (!isset($def['longname']) && !isset($def['shortname']))
 						throw new Exception("invalid PSAP config: either longname or shortname must be specified unless a parameter is unflagged.");
