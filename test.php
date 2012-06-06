@@ -28,7 +28,7 @@ $parser = new PSAP(array(
 	),
 	//'break' => array()	// doesn't look like config
 ));
-$parser->parse(array("create", "-u", "username", "-gAdministrators", "--groups", "Users", "--groups=Backup"));
+$parser->parse(array("create", "-u", "username", "-gAdministrators", "--groups", "Users", "--groups=Backup", "-x"));
 var_dump($parser->result());
 var_dump($parser->getErrors());
 
