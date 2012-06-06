@@ -30,7 +30,7 @@ class PSAP {
 					if (isset($def['longname']) || isset($def['shortname']))
 						throw new Exception("invalid PSAP config: neither longname nor shortname may be specified if parameter is unflagged.");
 					else
-						if ($i == 0) { $this->unflaggedHead = array($key=>$def); } else { $this->unflaggedTail = array($key=>$def); }	//TODO: we're almost certainly going to need to do someting to forbid or triage the case where both head and tail are unflagged and multi, because otherwise that is breakingly ambiguous.	// actually, maybe we can just ignore it.  if they're both multi, the head is greedier.  that's well defined.
+						if ($i == 0) { $this->unflaggedHead = array($key=>$def); } else { $this->unflaggedTail = array($key=>$def); }
 				} else
 					if (!isset($def['longname']) && !isset($def['shortname']))
 						throw new Exception("invalid PSAP config: either longname or shortname must be specified unless a parameter is unflagged.");
@@ -160,7 +160,7 @@ class PSAP {
 					if ($gathering !== FALSE) {
 						// the last loop found a parameter name but not a value for it, so we expect exactly one blob for that now.
 						$this->acceptValue($gathering, $arg);
-						$gathering = false;	//XXX: not sure what's more valid behavior here, stopping gathering even if the value was unacceptable or keep trying?  choosing what seems like the less runaway of the two options for now.
+						$gathering = false;
 					} else if ($headkey !== FALSE) {
 						// there is a leading unflagged head in the config, and it hasn't been filled yet, so this belongs there.
 						if ($this->acceptValue($headkey, $arg) && !$this->config[$headkey]['multi']) $headkey = FALSE;
