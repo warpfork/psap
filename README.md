@@ -11,3 +11,9 @@ Compiling / Releasing / Including
 It's all this one file.  Go ahead and just drop it somewhere in your ```include_path``` and call it a day.
 
 
+
+License
+-------
+LGPLv3.
+
+
