@@ -41,6 +41,8 @@ class PSAP {
 			throw new Exception("invalid PSAP config: description can only be a string.");
 		if (!is_array($config['type']) && (!is_string($config['type']) || array_search($config['type'], array("string", "int", "num", "bool"))===FALSE ))
 			throw new Exception("invalid PSAP config: type can only be one of \"string\", \"int\", \"num\", \"bool\", or an array enumerating valid values.");
+		if ($config['unflagged') && $config['type']=="bool")
+			throw new Exception("invalid PSAP config: type \"bool\" doesn't make sense for unflagged parameters.");
 		if ($config['required'] !== TRUE && $config['required'] !== FALSE)
 			throw new Exception("invalid PSAP config: required can only be a boolean.");
 		if (isset($config['default']) && $config['required'])
