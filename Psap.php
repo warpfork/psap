@@ -24,13 +24,13 @@ class PSAP {
 			if (!isset($def['type'])) $def['type'] = "string";
 			if (!isset($def['required'])) $def['required'] = TRUE;
 			if (!isset($def['multi'])) $def['multi'] = FALSE;
-			$this->validateConfigLine($def);
+			JSAP::validateConfigLine($def);
 			$i++;
 		}
 		// success
 		$this->config = $config;
 	}
-	private function validateConfigLine($config) {
+	private static function validateConfigLine($config) {
 		if (isset($config['longname']) && !is_string($config['longname']))
 			throw new Exception("invalid PSAP config: longname can only be a string.");
 		if (isset($config['shortname']) && !is_string($config['shortname']))
