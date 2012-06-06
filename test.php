@@ -31,3 +31,16 @@ $parser = new PSAP(array(
 $parser->parse(array("create", "-u", "username", "-gAdministrators", "--groups", "Users", "--groups=Backup"));
 var_dump($parser->result());
 var_dump($parser->getErrors());
+
+
+/*
+
+ERRATA
+
+* PSAP doesn't support multiple shortflags in a row.  PSAP sees an arg like "-uroot" and parses it as the shortflag "-u" with value "root".  That's a choice you can argue for or against; it's frankly somewhat arbitrary with supporters for each in history.
+* you can in fact manage to assign an empty string to an argument.  "-u=" would do it.
+
+
+
+
+*/
