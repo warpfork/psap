@@ -131,6 +131,14 @@ class PSAP {
 		for ($i = 0, $arg = $argv[0]; $i < $argc; $arg = @$argv[++$i]) {
 			switch (PSAP::detectFlag($arg)) {
 				case PSAP::$TLONG:
+					$split = strpos($arg, "=");
+					$long = ($split===FALSE) ? substr($arg, 2) : substr($arg, 2, $split-2);
+					$key = @$this->lookupLong[$long];
+					if (!$key) { $this->errors[] = "unknown long parameter name '".$long."'"; continue; }
+					if ($split === FALSE)
+						$gathering = $key;
+					else
+						$this->acceptValue($key, substr($arg, $split+1));
 					//TODO
 					break;
 				case PSAP::$TSHORT:
