@@ -159,11 +159,19 @@ class PSAP {
 		}
 	}
 	private function acceptValue($key, $value) {
+		$type = $this->config[$key]['type'];
 		if (!$this->config[$key]['multi'] && isset($this->results[$key]))
 			{ $this->errors[] = "multiple values were given for ".$this->getPresentationName($key)." parameter that doesn't accept repeated use"; return false; }
-		if (!PSAP::matchesType($this->config[$key]['type'], $value))
+		if (!PSAP::matchesType($type, $value))
 			{ $this->errors[] = "a value given for ".$this->getPresentationName($key)." parameter is not a valid type"; return false; }
-		// k, it's valid, put it in results.
+		// k, it's valid, now cast it...
+		if (!is_array($type)) switch ($type) {
+			case "int": $value = (int) $value;
+			case "num": $value = (float) $value;
+			case "bool": $value = TRUE;
+			case "string": $value = (string) $value;
+		}
+		// and put it in results.
 		if (!$this->config[$key]['multi'])
 			$this->results[$key] = $value;
 		else
