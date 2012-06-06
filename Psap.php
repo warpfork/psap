@@ -134,7 +134,16 @@ class PSAP {
 					//TODO
 					break;
 				case PSAP::$TSHORT:
-					//TODO;
+					$key = @$this->lookupShort[$arg[1]];
+					if (!$key) { $this->errors[] = "unknown short parameter name '".$arg[1]."'"; continue; }
+					$remainder = substr($arg, 2);
+					if ($this->config[$key]['type'] == "bool") {
+						$this->acceptValue($key, (strlen($remainder)>0) ? $remainder : TRUE);
+					} elseif (strlen($remainder) > 0) {
+						if ($arg[2]=='=') $remainder = substr($remainder, 1);
+						$this->acceptValue($key, $remainder);
+					} else
+						$gathering = $key;
 					break;
 				case PSAP::$TUNFLAG:
 					if ($gathering !== FALSE) {
