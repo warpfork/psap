@@ -132,6 +132,7 @@ class PSAP {
 			switch (PSAP::detectFlag($arg)) {
 				case PSAP::$TLONG:
 					$headkey = FALSE;
+					if ($gathering !== FALSE) { $this->acceptValue($gathering, TRUE); $gathering = false; }
 					$split = strpos($arg, "=");
 					$long = ($split===FALSE) ? substr($arg, 2) : substr($arg, 2, $split-2);
 					$key = @$this->lookupLong[$long];
@@ -144,6 +145,7 @@ class PSAP {
 					break;
 				case PSAP::$TSHORT:
 					$headkey = FALSE;
+					if ($gathering !== FALSE) { $this->acceptValue($gathering, TRUE); $gathering = false; }
 					$key = @$this->lookupShort[$arg[1]];
 					if (!$key) { $this->errors[] = "unknown short parameter name '".$arg[1]."'"; continue; }
 					$remainder = substr($arg, 2);
