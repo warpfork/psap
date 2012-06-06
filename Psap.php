@@ -157,7 +157,7 @@ class PSAP {
 	}
 	
 	private static function detectFlag($argstr) {
-		return (@$str[0]=='-') ? (@$str[1]=='-') ? PSAP::$TLONG : PSAP::$TSHORT : PSAP::$TUNFLAG;
+		return (@$str[0]=='-') ? (@$str[1]=='-') ? ($str=="--"? PSAP::$TLONG : PSAP::$TUNFLAG) : ($str=="-"? PSAP::$TSHORT : PSAP::$TUNFLAG) : PSAP::$TUNFLAG;
 	}
 	
 	public function result() {
