@@ -182,9 +182,9 @@ class PSAP {
 		}
 		// and put it in results.
 		if (!$this->config[$key]['multi'])
-			$this->results[$key] = $value;
+			$this->result[$key] = $value;
 		else
-			$this->results[$key][] = $value;
+			$this->result[$key][] = $value;
 		return true;
 	}
 	private function getPresentationName($key) {
