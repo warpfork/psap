@@ -65,6 +65,23 @@ $parser->parse(array("update", "alpha", "beta", "gamma", "delta"));
 var_dump($parser->result());
 var_dump($parser->getErrors());
 
+//TODO: we haven't got correct support for multi leading and single trailing unflagged at the moment, and that should be able to work.
+echo "\n----------------\n";
+$parser = new PSAP(array(
+	'srcs' => array(
+		'unflagged'	=> true,
+		'description'	=> "path(s) to copy from",
+		'multi'		=> true,
+	),
+	'target' => array(
+		'unflagged'	=> true,
+		'description'	=> "path to copy into",
+	),
+));
+$parser->parse(array("f1", "f2", "f3", "d1"));
+var_dump($parser->result());
+var_dump($parser->getErrors());
+
 /*
 
 ERRATA
