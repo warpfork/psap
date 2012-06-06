@@ -60,29 +60,48 @@ class PSAP {
 	private $result;
 	private $errors;
 	
+	/**
+	 * Call this function to perform a parsing; after this function returns, the result() and getErrors() methods will return what we figured out.
+	 * 
+	 * Repeated calls of this function on the same instance of PSAP will discard earlier results and errors completely and begin fresh, using the same config the PSAP instance was constructed with.
+	 * 
+	 * @param $argv an array of string arguments to parse.
+	 */
 	public function parse($argv) {
 		$this->result = array();
 		$this->errors = array();
 		$headDone = ($this->unflaggedHead == NULL);
 		$tailDone = ($this->unflaggedTail == NULL);
 		
+		// normalize input to an ordinal array, because that just annoys me less.
+		$argv = array_values($argv);
+		$argc = count($argv);
+		
+		// first figure out how many unflagged args there are continguously on the tail, because deciding that once that up front makes our error messages clearer if there are also incorrect gobs in the middle.
+		$nUnfTail = 0;
+		for ($i = $argc-1; $i >= 0; $i--, $nUnfTail++)
+			if (PSAP::detectFlag($argv[$i]) != PSAP::$TUNFLAG) break;
+		
+		// k, loop over all the things.
+		$gathering = false;
 		foreach ($argv as $arg) {
-			if (substr($arg, 0, 2) == "--") {
-				// it wants to be a long arg
-			
-			} elseif (substr($arg, 0, 2) == "--") {
-				// it wants to be a short arg
-			
-			} else {
-				// it's just a blob
-				if ($headDone) {
-					if (PSAP::matchesType($this->unflaggedHead['type'], $arg))
-						$this->result[key($this->unflaggedHead)] = $arg;
-					else
-						$this->errors[] = "an unflagged argument did not match the required type";
-				} else {
-					// run forward a bit and see if there are more long or short args after this... no, no, do that backwards from the end one time up front.
-				}
+			switch (PSAP::detectFlag($arg)) {
+				case PSAP::$TLONG:
+					//TODO
+					break;
+				case PSAP::$TSHORT:
+					//TODO;
+					break;
+				case PSAP::$TUNFLAG:
+					if ($headDone) {
+						if (PSAP::matchesType($this->unflaggedHead['type'], $arg))
+							$this->result[key($this->unflaggedHead)] = $arg;
+						else
+							$this->errors[] = "an unflagged argument did not match the required type";
+					} else {
+						// run forward a bit and see if there are more long or short args after this... no, no, do that backwards from the end one time up front.
+					}
+					break;
 			}
 		}
 	}
@@ -96,6 +115,10 @@ class PSAP {
 			case "string": return is_string($value);
 			default: throw new Exception("this is a bug in PSAP!");
 		}
+	}
+	
+	private static function detectFlag($argstr) {
+		return (@$str[0]=='-') ? (@$str[1]=='-') ? PSAP::$TLONG : PSAP::$TSHORT : PSAP::$TUNFLAG;
 	}
 	
 	public function result() {
