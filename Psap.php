@@ -179,7 +179,7 @@ class PSAP {
 	}
 	private function acceptValue($key, $value) {
 		$type = $this->config[$key]['type'];
-		if (!$this->config[$key]['multi'] && isset($this->results[$key]))
+		if (!$this->config[$key]['multi'] && isset($this->result[$key]))
 			{ $this->errors[] = "multiple values were given for ".$this->getPresentationName($key)." parameter that doesn't accept repeated use (value:\"".$value."\")"; return false; }
 		if (!PSAP::matchesType($type, $value))
 			{ $this->errors[] = "a value given for ".$this->getPresentationName($key)." parameter is not a valid type (value:\"".$value."\")"; return false; }
