@@ -39,7 +39,7 @@ class PSAP {
 			throw new Exception("invalid PSAP config: shortname can only be a single character.");
 		if (isset($config['description']) && !is_string($config['description']))
 			throw new Exception("invalid PSAP config: description can only be a string.");
-		if (!is_array($config['type']) && (!is_string($config['type']) || array_search($config['type'], array("string", "int", "num", "bool"))===FALSE ))	//XXX: others?  "array"?
+		if (!is_array($config['type']) && (!is_string($config['type']) || array_search($config['type'], array("string", "int", "num", "bool"))===FALSE ))
 			throw new Exception("invalid PSAP config: type can only be one of \"string\", \"int\", \"num\", \"bool\", or an array enumerating valid values.");
 		if ($config['required'] !== TRUE && $config['required'] !== FALSE)
 			throw new Exception("invalid PSAP config: required can only be a boolean.");
