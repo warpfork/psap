@@ -9,7 +9,7 @@ $parser = new PSAP(array(
 		'description'	=> "the task to perform",
 		'type'		=> array("create", "update", "destroy"),
 	),
-	//'break' => array('unflagged' => true)	// you can't have one of these unless its in the beginning or end
+	//'break' => array('unflagged' => true),	// you can't have one of these unless its in the beginning or end
 	'username' => array(					// this array key is what will be returned
 		'longname'	=> "username",				// defaults to not having one.  if neither longname or shortname is specified, it defaults to an unflagged option (which is only valid in the first or file slot of the array).
 		'shortname'	=> "u",					// defaults to not having one

@@ -25,6 +25,7 @@ class PSAP {
 			if (!isset($def['required'])) $def['required'] = TRUE;
 			if (!isset($def['multi'])) $def['multi'] = TRUE;
 			$this->validateConfigLine($def);
+			$i++;
 		}
 		// success
 		$this->config = $config;
