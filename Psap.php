@@ -11,7 +11,7 @@ class PSAP {
 					if (isset($def['longname']) || isset($def['shortname']))
 						throw new Exception("invalid PSAP config: neither longname nor shortname may be specified if parameter is unflagged.");
 					else
-						if ($i == 0) { $this->unflaggedHead = array($key=>$def); } else { $this->unflaggedTail = array($key=>$def); }	//TODO: we're almost certainly going to need to do someting to forbid or triage the case where both head and tail are unflagged and multi, because otherwise that is breakingly ambiguous.
+						if ($i == 0) { $this->unflaggedHead = array($key=>$def); } else { $this->unflaggedTail = array($key=>$def); }	//TODO: we're almost certainly going to need to do someting to forbid or triage the case where both head and tail are unflagged and multi, because otherwise that is breakingly ambiguous.	// actually, maybe we can just ignore it.  if they're both multi, the head is greedier.  that's well defined.
 				} else
 					if (!isset($def['longname']) && !isset($def['shortname']))
 						throw new Exception("invalid PSAP config: either longname or shortname must be specified unless a parameter is unflagged.");
@@ -110,8 +110,15 @@ class PSAP {
 					} else if ($headkey !== FALSE) {
 						// there is a leading unflagged head in the config, and it hasn't been filled yet, so this belongs there.
 						$this->acceptValue($headkey, $arg);
+					} else if ($i > $argc-$nUnfTail) {
+						// we're reached the tail of unflagged args.  (also, we could spin through the rest of the argv array right here if we wanted to, because the rest of the control flow in the loop has become fixed at this point.)
+						if ($tailkey === FALSE)
+							$this->errors[] = ($argc-$i)." trailing values didn't match any parameter and were ignored";
+						else
+							acceptValue($tailkey, $arg);
 					} else {
-						
+						// this is just an unexpected chunk of string that's neither a value for a named parameter nor in a place to gather with unflagged values at the head or tail.
+						$this->errors[] = "unexpected value not placed as a value to any parameter";
 					}
 					break;
 			}
