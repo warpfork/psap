@@ -102,13 +102,18 @@ class PSAP {
 					//TODO;
 					break;
 				case PSAP::$TUNFLAG:
-					if ($headDone) {
+					if ($gathering !== FALSE) {
+						// the last loop found a parameter name but not a value for it, so we expect exactly one blob for that now.
+						acceptValue($gathering, $value);
+						$gathering = false;	//XXX: not sure what's more valid behavior here, stopping gathering even if the value was unacceptable or keep trying?  choosing what seems like the less runaway of the two options for now.
+					} else if (!$headDone) {
+						// there is a leading unflagged head in the config, and it hasn't been filled yet, so this belongs there.
 						if (PSAP::matchesType($this->unflaggedHead['type'], $arg))
 							$this->result[key($this->unflaggedHead)] = $arg;
 						else
 							$this->errors[] = "an unflagged argument did not match the required type";
 					} else {
-						// run forward a bit and see if there are more long or short args after this... no, no, do that backwards from the end one time up front.
+						
 					}
 					break;
 			}
