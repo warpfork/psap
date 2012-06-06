@@ -163,7 +163,7 @@ class PSAP {
 						$gathering = false;	//XXX: not sure what's more valid behavior here, stopping gathering even if the value was unacceptable or keep trying?  choosing what seems like the less runaway of the two options for now.
 					} else if ($headkey !== FALSE) {
 						// there is a leading unflagged head in the config, and it hasn't been filled yet, so this belongs there.
-						$this->acceptValue($headkey, $arg);
+						if ($this->acceptValue($headkey, $arg) && !$this->config[$headkey]['multi']) $headkey = FALSE;
 					} else if ($i > $argc-$nUnfTail) {
 						// we're reached the tail of unflagged args.  (also, we could spin through the rest of the argv array right here if we wanted to, because the rest of the control flow in the loop has become fixed at this point.)
 						if ($tailkey === FALSE)

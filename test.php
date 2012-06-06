@@ -49,6 +49,21 @@ $parser->parse(array("update", "-uname", "bogus", "-gPoets"));
 var_dump($parser->result());
 var_dump($parser->getErrors());
 
+echo "\n----------------\n";
+$parser = new PSAP(array(
+	'subcommand' => array(
+		'unflagged'	=> true,
+		'description'	=> "the task to perform",
+		'type'		=> array("create", "update", "destroy"),
+	),
+	'sectors' => array(
+		'unflagged'	=> true,
+		'multi'		=> true,
+	),
+));
+$parser->parse(array("update", "alpha", "beta", "gamma", "delta"));
+var_dump($parser->result());
+var_dump($parser->getErrors());
 
 /*
 
