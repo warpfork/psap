@@ -45,8 +45,15 @@ class PSAP {
 			throw new Exception("invalid PSAP config: required can only be a boolean.");
 		if (isset($config['default']) && $config['required'])
 			throw new Exception("invalid PSAP config: if a parameter is required, why would you try to set a default for it?");
-		if (isset($config['default']) && !PSAP::matchesType($config['type'], $config['default']))
-			throw new Exception("invalid PSAP config: default value must match the allowed types for that parameter.");
+		if (isset($config['default'])) {
+			if (!$config['multi'] || !is_array($config['default'])) {
+				if (!PSAP::matchesType($config['type'], $config['default']))
+					throw new Exception("invalid PSAP config: default value must match the allowed types for that parameter.");
+			} else {
+				foreach ($config['default'] as $x) if (!PSAP::matchesType($config['type'], $x))
+					throw new Exception("invalid PSAP config: default value must match the allowed types for that parameter.");
+			}
+		}
 		foreach (array('unflagged', 'longname', 'shortname', 'description', 'type', 'required', 'default', 'multi') as $x) unset($config[$x]);
 		if (!empty($config)) throw new Exception("invalid PSAP config: unrecognized parameter definition option \"".key($config)."\"");
 	}
