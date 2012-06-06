@@ -158,7 +158,7 @@ class PSAP {
 						if ($tailkey === FALSE)
 							$this->errors[] = ($argc-$i)." trailing values didn't match any parameter and were ignored";
 						else
-							acceptValue($tailkey, $arg);
+							$this->acceptValue($tailkey, $arg);
 					} else {
 						// this is just an unexpected chunk of string that's neither a value for a named parameter nor in a place to gather with unflagged values at the head or tail.
 						$this->errors[] = "unexpected value not placed as a value to any parameter";
