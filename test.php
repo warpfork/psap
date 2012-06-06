@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+require_once "Psap.php";
+
 $parser = new PSAP(array(
 	'subcommand' => array(
 		'unflagged'	=> true,				// defaults to false; if this is not true either longname or shortname must be set or its an error.
@@ -27,4 +29,5 @@ $parser = new PSAP(array(
 	//'break' => array()	// doesn't look like config
 ));
 $parser->parse(array("create", "-u", "username", "-gAdministrators", "--groups", "Users", "--groups=Backup"));
-
+var_dump($parser->result());
+var_dump($parser->getErrors());
