@@ -24,7 +24,7 @@ $parser = new PSAP(array(
 		'shortname'	=> "g",
 		'description'	=> "the roles this command may act as",
 		'required'	=> false,
-		'multi'		=> true,		// defaults to false; an ordinal array is given back in the result for this key where values of that are of the type required.
+		'multi'		=> true,		// defaults to false; an ordinal array is given back in the result for this key where values of that are of the type required.  config error if applied to type=bool.
 	),
 	//'break' => array()	// doesn't look like config
 ));

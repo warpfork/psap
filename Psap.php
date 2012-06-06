@@ -54,6 +54,8 @@ class PSAP {
 					throw new Exception("invalid PSAP config: default value must match the allowed types for that parameter.");
 			}
 		}
+		if ($config['type'] == "bool" && $config['multi'])
+			throw new Exception("invalid PSAP config: accepting multi values for a parameter set as bool type doesn't make sense.");
 		foreach (array('unflagged', 'longname', 'shortname', 'description', 'type', 'required', 'default', 'multi') as $x) unset($config[$x]);
 		if (!empty($config)) throw new Exception("invalid PSAP config: unrecognized parameter definition option \"".key($config)."\"");
 	}
