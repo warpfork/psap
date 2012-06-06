@@ -188,9 +188,9 @@ class PSAP {
 	private static function matchesType($type, $value) {
 		if (is_array($type)) return (array_search($value, $type) !== FALSE);
 		switch ($type) {
-			case "int": return is_int($value);
+			case "int": return ((int)$value==$value);	// is_int doesn't do the trick here, since we're certainly getting strings.
 			case "num": return is_numeric($value);
-			case "bool": return ($value === TRUE || $value === FALSE);
+			case "bool": return ($value === TRUE);		// the "|| $value === FALSE" clause actually doesn't turn out to make sense, because a bool is true if present and null/unset if not present.
 			case "string": return is_string($value);
 			default: throw new Exception("this is a bug in PSAP!");
 		}
