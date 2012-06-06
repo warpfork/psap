@@ -5,7 +5,7 @@ class PSAP {
 		if (!is_array($config) || count($config) < 1)
 			throw new Exception("invalid PSAP config: no comprehensible config.");
 		// validate
-		$i = 0; foreach ($config as $key => $def) {
+		$i = 0; foreach ($config as $key => &$def) {
 			if ($i == 0 || $i == count($config)-1) {	// unflagged are allowed at head and tail; nowhere else.
 				if (isset($def['unflagged']) && $def['unflagged'] !== FALSE) {
 					if (isset($def['longname']) || isset($def['shortname']))
