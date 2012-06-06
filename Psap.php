@@ -27,6 +27,17 @@ class PSAP {
 			PSAP::validateConfigLine($def);
 			$i++;
 		}
+		// populate lookup tables (and explode if their are collisions)
+		foreach ($config as $key => &$def) {
+			if (isset($def['shortname']))
+				if (isset($this->lookupShort[$def['shortname']]))
+					throw new Exception("invalid PSAP config: shortname '".$def['shortname']."' cannot be assigned repeatedly");
+				else $this->lookupShort[$def['shortname']] = $key;
+			if (isset($def['longname']))
+				if (isset($this->lookupLong[$def['longname']]))
+					throw new Exception("invalid PSAP config: longname '".$def['longname']."' cannot be assigned repeatedly");
+				else $this->lookupLong[$def['longname']] = $key;
+		}
 		// success
 		$this->config = $config;
 	}
@@ -63,6 +74,8 @@ class PSAP {
 	}
 	
 	private $config;
+	private $lookupShort;
+	private $lookupLong;
 	private $unflaggedHead;
 	private $unflaggedTail;
 	private static $TUNFLAG = 1;
