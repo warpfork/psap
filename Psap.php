@@ -126,9 +126,9 @@ class PSAP {
 	}
 	private function acceptValue($key, $value) {
 		if (!$this->config[$key]['multi'] && isset($this->results[$key]))
-			{ $this->errors[] = "multiple values were given for parameter '".$this->getPresentationName($key)."' that doesn't accept repeated use"; return false; }
+			{ $this->errors[] = "multiple values were given for ".$this->getPresentationName($key)." parameter that doesn't accept repeated use"; return false; }
 		if (!PSAP::matchesType($this->config[$key]['type'], $value))
-			{ $this->errors[] = "a value given for parameter '".$this->getPresentationName($key)."' is not a valid type"; return false; }
+			{ $this->errors[] = "a value given for ".$this->getPresentationName($key)." parameter is not a valid type"; return false; }
 		// k, it's valid, put it in results.
 		if (!$this->config[$key]['multi'])
 			$this->results[$key] = $value;
@@ -136,8 +136,11 @@ class PSAP {
 			$this->results[$key][] = $value;
 		return true;
 	}
-	private function getPresentationName($key) { // doesn't give you a sensible answer for unflagged parameters!
-		return (isset($this->config[$key]['longname']) ? $this->config[$key]['longname'] : $this->config[$key]['shortname']);
+	private function getPresentationName($key) {
+		if (isset($this->config[$key]['longname'])) return "'".$this->config[$key]['longname']."'";
+		if (isset($this->config[$key]['shortname'])) return "'".$this->config[$key]['shortname']."'";
+		if ($key == @key($this->unflaggedTail)) return "trailing unflagged";
+		return "unflagged";
 	}
 	
 	private static function matchesType($type, $value) {
