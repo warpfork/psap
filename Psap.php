@@ -162,5 +162,15 @@ class PSAP {
 	public function getErrors() {
 		return $this->errors;
 	}
+	
+	public function getUsage() {
+		generateUsage();
+		return $this->usage;
+	}
+	private $usage;
+	private function generateUsage() {
+		if (isset($this->usage)) return;
+		//TODO
+	}
 }
 
