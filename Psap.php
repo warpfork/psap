@@ -114,6 +114,21 @@ class PSAP {
 			}
 		}
 	}
+	private function acceptValue($key, $value) {
+		if (!$this->config[$key]['multi'] && isset($this->results[$key]))
+			{ $this->errors[] = "multiple values were given for parameter '".$this->getPresentationName($key)."' that doesn't accept repeated use"; return false; }
+		if (!PSAP::matchesType($this->config[$key]['type'], $value))
+			{ $this->errors[] = "a values given parameter '".$this->getPresentationName($key)."' is not a valid type"; return false; }
+		// k, it's valid, put it in results.
+		if (!$this->config[$key]['multi'])
+			$this->results[$key] = $value;
+		else
+			$this->results[$key][] = $value;
+		return true;
+	}
+	private function getPresentationName($key) { // doesn't give you a sensible answer for unflagged parameters!
+		return (isset($this->config[$key]['longname']) ? $this->config[$key]['longname'] : $this->config[$key]['shortname']);
+	}
 	
 	private static function matchesType($type, $value) {
 		if (is_array($type)) return (array_search($value, $type) !== FALSE);
