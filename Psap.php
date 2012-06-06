@@ -24,7 +24,7 @@ class PSAP {
 			if (!isset($def['type'])) $def['type'] = "string";
 			if (!isset($def['required'])) $def['required'] = TRUE;
 			if (!isset($def['multi'])) $def['multi'] = FALSE;
-			JSAP::validateConfigLine($def);
+			PSAP::validateConfigLine($def);
 			$i++;
 		}
 		// success
@@ -123,7 +123,7 @@ class PSAP {
 		if (!$this->config[$key]['multi'] && isset($this->results[$key]))
 			{ $this->errors[] = "multiple values were given for parameter '".$this->getPresentationName($key)."' that doesn't accept repeated use"; return false; }
 		if (!PSAP::matchesType($this->config[$key]['type'], $value))
-			{ $this->errors[] = "a values given parameter '".$this->getPresentationName($key)."' is not a valid type"; return false; }
+			{ $this->errors[] = "a value given for parameter '".$this->getPresentationName($key)."' is not a valid type"; return false; }
 		// k, it's valid, put it in results.
 		if (!$this->config[$key]['multi'])
 			$this->results[$key] = $value;
