@@ -181,8 +181,8 @@ class PSAP {
 		
 		// apply default values for anything that wasn't picked up from args and has a default available
 		foreach ($this->config as $key => &$def)
-			if (!isset($this->results[$key]) && isset($def['default']))
-				$this->results[$key] = $def['default'];
+			if (!isset($this->result[$key]) && isset($def['default']))
+				$this->result[$key] = $def['default'];
 	}
 	private function acceptValue($key, $value) {
 		$type = $this->config[$key]['type'];
