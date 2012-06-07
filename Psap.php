@@ -46,7 +46,7 @@ class PSAP {
 			PSAP::validateConfigLine($def);
 			$i++;
 		}
-		// populate lookup tables (and explode if their are collisions)
+		// populate lookup tables (and explode if there are collisions)
 		foreach ($config as $key => &$def) {
 			if (isset($def['shortname']))
 				if (isset($this->lookupShort[$def['shortname']]))
