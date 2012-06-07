@@ -102,6 +102,7 @@ class PSAP {
 	private static $TLONG = 3;
 	private $result;
 	private $errors;
+	//TODO: perhaps we should keep a count of major/showstopper errors and of mere warning errors.  and then keep the majors at the front of the errors array.  hm, no, that'll break reporting them in the order of encounter which could make output more confusing.  perhaps it should just be two separate arrays.  also, JSAP has a success() method that i didn't copy yet, and i think i should.
 	
 	/**
 	 * Call this function to perform a parsing; after this function returns, the result() and getErrors() methods will return what we figured out.
