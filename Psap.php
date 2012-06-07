@@ -183,6 +183,11 @@ class PSAP {
 		foreach ($this->config as $key => &$def)
 			if (!isset($this->result[$key]) && isset($def['default']))
 				$this->result[$key] = $def['default'];
+		
+		// assert that required parameters have a value and rack up errors if they don't.
+		foreach ($this->config as $key => &$def)
+			if ($def['required'] && !isset($this->result[$key]))
+				$this->errors[] = "a value is required for ".$this->getPresentationName($key)." parameter but none was provided!";
 	}
 	private function acceptValue($key, $value) {
 		$type = $this->config[$key]['type'];
