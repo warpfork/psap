@@ -22,23 +22,23 @@
 class PSAP {
 	public function __construct($config) {
 		if (!is_array($config) || count($config) < 1)
-			throw new Exception("invalid PSAP config: no comprehensible config.");
+			throw new PsapConfigError("invalid PSAP config: no comprehensible config.");
 		// validate
 		$i = 0; foreach ($config as $key => &$def) {
 			if ($i == 0 || $i == count($config)-1) {	// unflagged are allowed at head and tail; nowhere else.
 				if (isset($def['unflagged']) && $def['unflagged'] !== FALSE) {
 					if (isset($def['longname']) || isset($def['shortname']))
-						throw new Exception("invalid PSAP config: neither longname nor shortname may be specified if parameter is unflagged.");
+						throw new PsapConfigError("invalid PSAP config: neither longname nor shortname may be specified if parameter is unflagged.");
 					else
 						if ($i == 0) { $this->unflaggedHead = array($key=>$def); } else { $this->unflaggedTail = array($key=>$def); }
 				} else
 					if (!isset($def['longname']) && !isset($def['shortname']))
-						throw new Exception("invalid PSAP config: either longname or shortname must be specified unless a parameter is unflagged.");
+						throw new PsapConfigError("invalid PSAP config: either longname or shortname must be specified unless a parameter is unflagged.");
 			} else {
 				if (isset($def['unflagged']) && $def['unflagged'] !== FALSE)
-					throw new Exception("invalid PSAP config: unflagged parameters are only allowed at the beginning or end.");
+					throw new PsapConfigError("invalid PSAP config: unflagged parameters are only allowed at the beginning or end.");
 				if (!isset($def['longname']) && !isset($def['shortname']))
-					throw new Exception("invalid PSAP config: either longname or shortname must be specified unless a parameter is unflagged.");
+					throw new PsapConfigError("invalid PSAP config: either longname or shortname must be specified unless a parameter is unflagged.");
 			}
 			if (!isset($def['type'])) $def['type'] = "string";
 			if (!isset($def['required'])) $def['required'] = TRUE;
@@ -50,11 +50,11 @@ class PSAP {
 		foreach ($config as $key => &$def) {
 			if (isset($def['shortname']))
 				if (isset($this->lookupShort[$def['shortname']]))
-					throw new Exception("invalid PSAP config: shortname '".$def['shortname']."' cannot be assigned repeatedly");
+					throw new PsapConfigError("invalid PSAP config: shortname '".$def['shortname']."' cannot be assigned repeatedly");
 				else $this->lookupShort[$def['shortname']] = $key;
 			if (isset($def['longname']))
 				if (isset($this->lookupLong[$def['longname']]))
-					throw new Exception("invalid PSAP config: longname '".$def['longname']."' cannot be assigned repeatedly");
+					throw new PsapConfigError("invalid PSAP config: longname '".$def['longname']."' cannot be assigned repeatedly");
 				else $this->lookupLong[$def['longname']] = $key;
 		}
 		// success
@@ -62,34 +62,34 @@ class PSAP {
 	}
 	private static function validateConfigLine($config) {
 		if (isset($config['longname']) && !is_string($config['longname']))
-			throw new Exception("invalid PSAP config: longname can only be a string.");
+			throw new PsapConfigError("invalid PSAP config: longname can only be a string.");
 		if (isset($config['shortname']) && !is_string($config['shortname']))
-			throw new Exception("invalid PSAP config: shortname can only be a string.");
+			throw new PsapConfigError("invalid PSAP config: shortname can only be a string.");
 		if (isset($config['shortname']) && strlen($config['shortname']) !== 1)
-			throw new Exception("invalid PSAP config: shortname can only be a single character.");
+			throw new PsapConfigError("invalid PSAP config: shortname can only be a single character.");
 		if (isset($config['description']) && !is_string($config['description']))
-			throw new Exception("invalid PSAP config: description can only be a string.");
+			throw new PsapConfigError("invalid PSAP config: description can only be a string.");
 		if (!is_array($config['type']) && (!is_string($config['type']) || array_search($config['type'], array("string", "int", "num", "bool"))===FALSE ))
-			throw new Exception("invalid PSAP config: type can only be one of \"string\", \"int\", \"num\", \"bool\", or an array enumerating valid values.");
+			throw new PsapConfigError("invalid PSAP config: type can only be one of \"string\", \"int\", \"num\", \"bool\", or an array enumerating valid values.");
 		if (isset($config['unflagged']) && $config['type']=="bool")
-			throw new Exception("invalid PSAP config: type \"bool\" doesn't make sense for unflagged parameters.");
+			throw new PsapConfigError("invalid PSAP config: type \"bool\" doesn't make sense for unflagged parameters.");
 		if ($config['required'] !== TRUE && $config['required'] !== FALSE)
-			throw new Exception("invalid PSAP config: required can only be a boolean.");
+			throw new PsapConfigError("invalid PSAP config: required can only be a boolean.");
 		if (isset($config['default']) && $config['required'])
-			throw new Exception("invalid PSAP config: if a parameter is required, why would you try to set a default for it?");
+			throw new PsapConfigError("invalid PSAP config: if a parameter is required, why would you try to set a default for it?");
 		if (isset($config['default'])) {
 			if (!$config['multi'] || !is_array($config['default'])) {
 				if (!PSAP::matchesType($config['type'], $config['default']))
-					throw new Exception("invalid PSAP config: default value must match the allowed types for that parameter.");
+					throw new PsapConfigError("invalid PSAP config: default value must match the allowed types for that parameter.");
 			} else {
 				foreach ($config['default'] as $x) if (!PSAP::matchesType($config['type'], $x))
-					throw new Exception("invalid PSAP config: default value must match the allowed types for that parameter.");
+					throw new PsapConfigError("invalid PSAP config: default value must match the allowed types for that parameter.");
 			}
 		}
 		if ($config['type'] == "bool" && $config['multi'])
-			throw new Exception("invalid PSAP config: accepting multi values for a parameter set as bool type doesn't make sense.");
+			throw new PsapConfigError("invalid PSAP config: accepting multi values for a parameter set as bool type doesn't make sense.");
 		foreach (array('unflagged', 'longname', 'shortname', 'description', 'type', 'required', 'default', 'multi') as $x) unset($config[$x]);
-		if (!empty($config)) throw new Exception("invalid PSAP config: unrecognized parameter definition option \"".key($config)."\"");
+		if (!empty($config)) throw new PsapConfigError("invalid PSAP config: unrecognized parameter definition option \"".key($config)."\"");
 	}
 	
 	private $config;
@@ -249,4 +249,8 @@ class PSAP {
 		//TODO
 	}
 }
+
+class PsapConfigError extends ErrorException {}
+class PsapParseError extends RuntimeException {}
+class PsapParseWarn extends RuntimeException {}
 
