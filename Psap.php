@@ -59,7 +59,8 @@ class PSAP {
 		}
 		// success
 		$this->config = $config;
-		$this->throw = true;
+		$this->throwParseError = true;
+		$this->throwParseWarn = true;
 	}
 	private static function validateConfigLine($config) {
 		if (isset($config['longname']) && !is_string($config['longname']))
@@ -92,11 +93,15 @@ class PSAP {
 		foreach (array('unflagged', 'longname', 'shortname', 'description', 'type', 'required', 'default', 'multi') as $x) unset($config[$x]);
 		if (!empty($config)) throw new PsapConfigError("invalid PSAP config: unrecognized parameter definition option \"".key($config)."\"");
 	}
-	public function configureThrowOnParseProblem($bool) {
-		$this->throw = ($bool == TRUE);
+	public function configureThrowOnParseError($bool) {
+		$this->throwParseError = ($bool == TRUE);
+	}
+	public function configureThrowOnParseWarn($bool) {
+		$this->throwParseWarn = ($bool == TRUE);
 	}
 	
-	private $throw;
+	private $throwParseError;
+	private $throwParseWarn;
 	private $config;
 	private $lookupShort;
 	private $lookupLong;
@@ -214,7 +219,8 @@ class PSAP {
 		return true;
 	}
 	private function acceptParseProblem(RuntimeException $problem) {
-		if ($this->throw) throw $problem;
+		if ($problem instanceof PsapParseError && $this->throwParseError) throw $problem;
+		if ($problem instanceof PsapParseWarn  && $this->throwParseWarn)  throw $problem;
 		$this->errors[] = $problem;
 	}
 	private function getPresentationName($key) {
