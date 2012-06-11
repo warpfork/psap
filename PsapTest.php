@@ -142,7 +142,7 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testParseOneBool() {
-		$parser = self::setupTypeInt();
+		$parser = self::setupTypeBool();
 		$parser->parse(array("-o"));
 		$this->assertSame(
 			array("opt" => true),
@@ -153,7 +153,7 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 	/** @expectedException PsapParseError
 	 */
 	public function testFailParseBoolTypeWrongString() {
-		$parser = self::setupTypeInt();
+		$parser = self::setupTypeBool();
 		$parser->parse(array("-ostr"));
 	}
 }
