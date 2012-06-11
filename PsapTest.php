@@ -202,7 +202,7 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	private static function setupBeta() {
-		return new PSAP(array(
+		return new Psap(array(
 			'username' => array(
 				'longname'	=> "username",
 				'shortname'	=> "u",
@@ -230,6 +230,7 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 		$parser->configureThrowOnParseError(false);
 		$parser->configureThrowOnParseWarn(false);
 		$parser->parse(array());
+		var_dump($parser->config);
 		$this->assertSame(
 			array(
 				"username"	=> "root",

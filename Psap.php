@@ -100,7 +100,7 @@ class PSAP {
 	
 	private $throwParseError;
 	private $throwParseWarn;
-	private $config;
+	var $config;
 	private $lookupShort;
 	private $lookupLong;
 	private $unflaggedHead;
@@ -188,7 +188,7 @@ class PSAP {
 		
 		// apply default values for anything that wasn't picked up from args (including null in the case of nonrequired parameters that don't have default values).
 		foreach ($this->config as $key => &$def)
-			if (!isset($this->result[$key]) && isset($def['default']))
+			if (!isset($this->result[$key]) && array_key_exists('default',$def))
 				$this->result[$key] = $def['default'];
 		
 		// assert that all parameters have a value and rack up errors if they don't.
