@@ -41,8 +41,10 @@ class PSAP {
 					throw new PsapConfigError("either longname or shortname must be specified unless a parameter is unflagged.");
 			}
 			if (!isset($def['type'])) $def['type'] = "string";
-			if (!isset($def['required'])) $def['required'] = TRUE;
 			if (!isset($def['multi'])) $def['multi'] = FALSE;
+			if ($def['type']=="bool")
+				if (isset($def['default'])) throw new PsapConfigError("type \"bool\" parameters always default to false.  you may not specify a default.");
+				else $def['default'] = FALSE;
 			PSAP::validateConfigLine($def);
 			$i++;
 		}
@@ -75,11 +77,7 @@ class PSAP {
 			throw new PsapConfigError("type can only be one of \"string\", \"int\", \"num\", \"bool\", or an array enumerating valid values.");
 		if (isset($config['unflagged']) && $config['type']=="bool")
 			throw new PsapConfigError("type \"bool\" doesn't make sense for unflagged parameters.");
-		if ($config['required'] !== TRUE && $config['required'] !== FALSE)
-			throw new PsapConfigError("required can only be a boolean.");
-		if (isset($config['default']) && $config['required'])
-			throw new PsapConfigError("if a parameter is required, why would you try to set a default for it?");
-		if (isset($config['default'])) {
+		if (isset($config['default']) && $config['default'] !== NULL) {
 			if (!$config['multi'] || !is_array($config['default'])) {
 				if (!PSAP::matchesType($config['type'], $config['default']))
 					throw new PsapConfigError("default value must match the allowed types for that parameter.");
@@ -90,7 +88,7 @@ class PSAP {
 		}
 		if ($config['type'] == "bool" && $config['multi'])
 			throw new PsapConfigError("accepting multi values for a parameter set as bool type doesn't make sense.");
-		foreach (array('unflagged', 'longname', 'shortname', 'description', 'type', 'required', 'default', 'multi') as $x) unset($config[$x]);
+		foreach (array('unflagged', 'longname', 'shortname', 'description', 'type', 'default', 'multi') as $x) unset($config[$x]);
 		if (!empty($config)) throw new PsapConfigError("unrecognized parameter definition option \"".key($config)."\"");
 	}
 	public function configureThrowOnParseError($bool) {
@@ -188,14 +186,14 @@ class PSAP {
 			}
 		}
 		
-		// apply default values for anything that wasn't picked up from args and has a default available
+		// apply default values for anything that wasn't picked up from args (including null in the case of nonrequired parameters that don't have default values).
 		foreach ($this->config as $key => &$def)
 			if (!isset($this->result[$key]) && isset($def['default']))
 				$this->result[$key] = $def['default'];
 		
-		// assert that required parameters have a value and rack up errors if they don't.
+		// assert that all parameters have a value and rack up errors if they don't.
 		foreach ($this->config as $key => &$def)
-			if ($def['required'] && !isset($this->result[$key]))
+			if (!isset($this->result[$key]))
 				$this->acceptParseProblem(new PsapParseError("a value is required for ".$this->getPresentationName($key)." parameter but none was provided!"));
 	}
 	private function acceptValue($key, $value) {
@@ -235,7 +233,7 @@ class PSAP {
 		switch ($type) {
 			case "int": return is_numeric($value) && ((int)$value==$value);	// is_int doesn't do the trick here, since we're certainly getting strings.  and you need the is_numeric check in addition to the casting part because casting "asdf" to int will give you a zero.
 			case "num": return is_numeric($value);
-			case "bool": return ($value === TRUE);		// the "|| $value === FALSE" clause actually doesn't turn out to make sense, because a bool is true if present and null/unset if not present.
+			case "bool": return ($value === TRUE || $value === FALSE);
 			case "string": return is_string($value);
 			default: throw new Exception("this is a bug in PSAP!");
 		}
