@@ -2,7 +2,7 @@
 /*
  * Copyright 2012 Eric Myhre <http://exultant.us>
  * 
- * This file is part of PSAP.
+ * This file is part of PSAP <https://github.com/heavenlyhash/psap/>.
  * 
  * PSAP is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
