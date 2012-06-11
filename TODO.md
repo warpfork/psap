@@ -4,6 +4,7 @@
  * you could support multiple unflagged in a row as long as they're, uh, in a row.  would be better than multi?  but you can just use multi.  oshit, what if you want different types?  like, confined subcommand, then optionally one int.  we should support that.
 * it's quite annoying that having by default required=true, so if you set a default, you have to be verbose and specify required=false manually.  fix that.
  * actually, it would make perfect sense to remove the 'required' parameter completely and have required=false be replaced by default=null.
+ * type bool should be trivially required=false and default=false
 * you really should have that docname thinger option when you get around to generating usage strings
 * allow specifying nonstandard and zero wrap on getUsage.
 * parse error reporting
