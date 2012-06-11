@@ -59,6 +59,7 @@ class PSAP {
 		}
 		// success
 		$this->config = $config;
+		$this->throw = true;
 	}
 	private static function validateConfigLine($config) {
 		if (isset($config['longname']) && !is_string($config['longname']))
@@ -91,7 +92,11 @@ class PSAP {
 		foreach (array('unflagged', 'longname', 'shortname', 'description', 'type', 'required', 'default', 'multi') as $x) unset($config[$x]);
 		if (!empty($config)) throw new PsapConfigError("invalid PSAP config: unrecognized parameter definition option \"".key($config)."\"");
 	}
+	public function configureThrowOnParseProblem($bool) {
+		$this->throw = ($bool == TRUE);
+	}
 	
+	private $throw;
 	private $config;
 	private $lookupShort;
 	private $lookupLong;
@@ -136,7 +141,7 @@ class PSAP {
 					$split = strpos($arg, "=");
 					$long = ($split===FALSE) ? substr($arg, 2) : substr($arg, 2, $split-2);
 					$key = @$this->lookupLong[$long];
-					if (!$key) { $this->errors[] = new PsapParseWarn("unknown long parameter name '".$long."'"); continue; }
+					if (!$key) { $this->acceptParseProblem(new PsapParseWarn("unknown long parameter name '".$long."'")); continue; }
 					if ($split === FALSE)
 						$gathering = $key;
 					else
@@ -146,7 +151,7 @@ class PSAP {
 					$headkey = FALSE;
 					if ($gathering !== FALSE) { $this->acceptValue($gathering, TRUE); $gathering = false; }
 					$key = @$this->lookupShort[$arg[1]];
-					if (!$key) { $this->errors[] = new PsapParseWarn("unknown short parameter name '".$arg[1]."'"); continue; }
+					if (!$key) { $this->acceptParseProblem(new PsapParseWarn("unknown short parameter name '".$arg[1]."'")); continue; }
 					$remainder = substr($arg, 2);
 					if ($this->config[$key]['type'] == "bool") {
 						$this->acceptValue($key, (strlen($remainder)>0) ? $remainder : TRUE);
@@ -167,12 +172,12 @@ class PSAP {
 					} else if ($i > $argc-$nUnfTail) {
 						// we're reached the tail of unflagged args.  (also, we could spin through the rest of the argv array right here if we wanted to, because the rest of the control flow in the loop has become fixed at this point.)
 						if ($tailkey === FALSE)
-							{ $this->errors[] = new PsapParseWarn(($argc-$i)." trailing values didn't match any parameter and were ignored"); break 2; }
+							{ $this->acceptParseProblem(new PsapParseWarn(($argc-$i)." trailing values didn't match any parameter and were ignored")); break 2; }
 						else
 							$this->acceptValue($tailkey, $arg); /* we don't do the same thing with setting tailkey to false as we do with headkey because getting messages about multiple values ignores is actually reasonable here. */
 					} else {
 						// this is just an unexpected chunk of string that's neither a value for a named parameter nor in a place to gather with unflagged values at the head or tail.
-						$this->errors[] = new PsapParseWarn("unexpected value not placed as a value to any parameter");
+						acceptParseProblem(new PsapParseWarn("unexpected value not placed as a value to any parameter"));
 					}
 					break;
 			}
@@ -186,14 +191,14 @@ class PSAP {
 		// assert that required parameters have a value and rack up errors if they don't.
 		foreach ($this->config as $key => &$def)
 			if ($def['required'] && !isset($this->result[$key]))
-				$this->errors[] = new PsapParseError("a value is required for ".$this->getPresentationName($key)." parameter but none was provided!");
+				acceptParseProblem(new PsapParseError("a value is required for ".$this->getPresentationName($key)." parameter but none was provided!"));
 	}
 	private function acceptValue($key, $value) {
 		$type = $this->config[$key]['type'];
 		if (!$this->config[$key]['multi'] && isset($this->result[$key]))
-			{ $this->errors[] = new PsapParseWarn("multiple values were given for ".$this->getPresentationName($key)." parameter that doesn't accept repeated use (value:\"".$value."\"); value ignored"); return false; }
+			{ $this->acceptParseProblem(new PsapParseWarn("multiple values were given for ".$this->getPresentationName($key)." parameter that doesn't accept repeated use (value:\"".$value."\"); value ignored")); return false; }
 		if (!PSAP::matchesType($type, $value))
-			{ $this->errors[] = new PsapParseError("a value given for ".$this->getPresentationName($key)." parameter is not a valid type (value:\"".$value."\")"); return false; }
+			{ $this->acceptParseProblem(new PsapParseError("a value given for ".$this->getPresentationName($key)." parameter is not a valid type (value:\"".$value."\")")); return false; }
 		// k, it's valid, now cast it...
 		if (!is_array($type)) switch ($type) {
 			case "int": $value = (int) $value;
@@ -207,6 +212,10 @@ class PSAP {
 		else
 			$this->result[$key][] = $value;
 		return true;
+	}
+	private function acceptParseProblem(RuntimeException $problem) {
+		if ($this->throw) throw $problem;
+		$this->errors[] = $problem;
 	}
 	private function getPresentationName($key) {
 		if (isset($this->config[$key]['longname'])) return "'".$this->config[$key]['longname']."'";

@@ -6,7 +6,6 @@
 * you really should have that docname thinger option when you get around to generating usage strings
 * allow specifying nonstandard and zero wrap on getUsage.
 * parse error reporting
- * add an exception throwing mode to parse.  and yes as stateful.  and not in the constructor because that would be less self-documenting.  and possibly on by default, since for example if you have a program where the subcommand wasn't even specified, you really just wanna yell about that briefly right away, not give people a wall of error text most of which isn't even relevant to them yet.
  * add a simple success($treatWarningsAsFailure=true) predicate
  * add a simple getErrorString() method 
  * actually, maybe catering to the common case would be better served by wrapping both of those last two items into a dieIfUnsuccessful method.  that could then also make sure the exit code is done correctly.
