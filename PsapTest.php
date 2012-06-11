@@ -24,7 +24,7 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 	public function testParseOneShortSeparatedString() {
 		$parser = self::setupAlpha();
 		$parser->parse(array("-o", "val"));
-		$this->assertSame(array(), $parser->getErrors());
+		$this->assertSame(array(), $parser->getProblems());
 		$this->assertSame(
 			array("opt" => "val"),
 			$parser->result()
@@ -43,7 +43,7 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 	public function testParseOneShortCattedString() {
 		$parser = self::setupAlpha();
 		$parser->parse(array("-oval"));
-		$this->assertSame(array(), $parser->getErrors());
+		$this->assertSame(array(), $parser->getProblems());
 		$this->assertSame(
 			array("opt" => "val"),
 			$parser->result()
@@ -53,7 +53,7 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 	public function testParseOneLongSeparatedString() {
 		$parser = self::setupAlpha();
 		$parser->parse(array("--option", "val"));
-		$this->assertSame(array(), $parser->getErrors());
+		$this->assertSame(array(), $parser->getProblems());
 		$this->assertSame(
 			array("opt" => "val"),
 			$parser->result()
@@ -63,7 +63,7 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 	public function testParseOneLongEqualledString() {
 		$parser = self::setupAlpha();
 		$parser->parse(array("--option=val"));
-		$this->assertSame(array(), $parser->getErrors());
+		$this->assertSame(array(), $parser->getProblems());
 		$this->assertSame(
 			array("opt" => "val"),
 			$parser->result()

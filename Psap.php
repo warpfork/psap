@@ -109,10 +109,10 @@ class PSAP {
 	private static $TSHORT = 2;
 	private static $TLONG = 3;
 	private $result;
-	private $errors;
+	private $problems;
 	
 	/**
-	 * Call this function to perform a parsing; after this function returns, the result() and getErrors() methods will return what we figured out.
+	 * Call this function to perform a parsing; after this function returns, the result() and getProblems() methods will return what we figured out.
 	 * 
 	 * Repeated calls of this function on the same instance of PSAP will discard earlier results and errors completely and begin fresh, using the same config the PSAP instance was constructed with.
 	 * 
@@ -120,7 +120,7 @@ class PSAP {
 	 */
 	public function parse($argv) {
 		$this->result = array();
-		$this->errors = array();
+		$this->problems = array();
 		$headkey = ($this->unflaggedHead == NULL) ? FALSE : key($this->unflaggedHead);
 		$tailkey = ($this->unflaggedTail == NULL) ? FALSE : key($this->unflaggedTail);
 		
@@ -219,7 +219,7 @@ class PSAP {
 	private function acceptParseProblem(RuntimeException $problem) {
 		if ($problem instanceof PsapParseError && $this->throwParseError) throw $problem;
 		if ($problem instanceof PsapParseWarn  && $this->throwParseWarn)  throw $problem;
-		$this->errors[] = $problem;
+		$this->problems[] = $problem;
 	}
 	private function getPresentationName($key) {
 		if (isset($this->config[$key]['longname'])) return "'".$this->config[$key]['longname']."'";
@@ -247,8 +247,8 @@ class PSAP {
 		return $this->result;
 	}
 	
-	public function getErrors() {
-		return $this->errors;
+	public function getProblems() {
+		return $this->problems;
 	}
 	
 	public function getUsage() {
