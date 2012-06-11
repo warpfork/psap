@@ -266,6 +266,12 @@ class PSAP {
 		return $complaint;
 	}
 	
+	public function dieIfFailed() {
+		if ($this->success()) return;
+		fprintf(STDERR, "%s", "{$_SERVER['argv'][0]}: could not understand arguments\n".$this->getErrorString());
+		exit(1);
+	}
+	
 	public function getUsage() {
 		generateUsage();
 		return $this->usage;
