@@ -201,6 +201,18 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 		));
 	}
 	
+	/** @expectedException PsapConfigError
+	 */
+	public function testFailConfigBoolMulti() {
+		new Psap(array(
+			'opt' => array(
+				'shortname'	=> "o",
+				'type'		=> "bool",
+				'multi'		=> true,
+			),
+		));
+	}
+	
 	private static function setupBeta() {
 		return new Psap(array(
 			'username' => array(
