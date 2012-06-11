@@ -200,6 +200,60 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 			),
 		));
 	}
+	
+	private static function setupBeta() {
+		return new PSAP(array(
+			'username' => array(
+				'longname'	=> "username",
+				'shortname'	=> "u",
+				'description'	=> "the name of the user to act as",
+				'default'	=> "root",
+			),
+			'groups' => array(
+				'longname'	=> "groups",
+				'shortname'	=> "g",
+				'description'	=> "the roles this command may act as",
+				'default'	=> null,
+				'multi'		=> true,
+			),
+			'test' => array(
+				'longname'	=> "test",
+				'shortname'	=> "T",
+				'description'	=> "if running in test mode, normal output messages occur, but no actual actions will be performed.  a dry run, in other words.",
+				'type'		=> "bool",
+			),
+		));
+	}
+	
+	public function testParseDefaults() {
+		$parser = self::setupBeta();
+		$parser->configureThrowOnParseError(false);
+		$parser->configureThrowOnParseWarn(false);
+		$parser->parse(array());
+		$this->assertSame(
+			array(
+				"username"	=> "root",
+				"groups"	=> null,
+				"test"		=> false,
+			), $parser->result()
+		);
+		$this->assertSame(array(), $parser->getErrors());
+	}
+	
+	public function testParseDefaultOverriding() {
+		$parser = self::setupBeta();
+		$parser->configureThrowOnParseError(false);
+		$parser->configureThrowOnParseWarn(false);
+		$parser->parse(array("-uhash"));
+		$this->assertSame(
+			array(
+				"username"	=> "hash",
+				"groups"	=> null,
+				"test"		=> false,
+			), $parser->result()
+		);
+		$this->assertSame(array(), $parser->getErrors());
+	}
 }
 
 
