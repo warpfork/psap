@@ -127,7 +127,6 @@ class PSAP {
 		// normalize input to an ordinal array, because that just annoys me less.
 		$argv = array_values($argv);
 		$argc = count($argv);
-		if ($argc < 1) return;
 		
 		// first figure out how many unflagged args there are contiguously on the tail, because deciding that once that up front makes our error messages clearer if there are also incorrect gobs in the middle.
 		$nUnfTail = 0;
@@ -136,7 +135,8 @@ class PSAP {
 		
 		// k, loop over all the things.
 		$gathering = false;
-		for ($i = 0, $arg = $argv[0]; $i < $argc; $arg = @$argv[++$i]) {
+		for ($i = 0; $i < $argc; $i++) {
+			$arg = $argv[$i];
 			switch (PSAP::detectFlag($arg)) {
 				case PSAP::$TLONG:
 					$headkey = FALSE;
