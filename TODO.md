@@ -5,9 +5,8 @@
 * you really should have that docname thinger option when you get around to generating usage strings
 * allow specifying nonstandard and zero wrap on getUsage.
 * parse error reporting
- * add a simple success($treatWarningsAsFailure=true) predicate
  * add a simple getErrorString() method 
- * actually, maybe catering to the common case would be better served by wrapping both of those last two items into a dieIfUnsuccessful method.  that could then also make sure the exit code is done correctly.
+ * actually, maybe catering to the common case would be better served by wrapping both getErrorString() and success() into a dieIfFailed method.  that could then also make sure the exit code is done correctly.
 * type lambdas
  * well, support them at all, first of all.
  * perhaps a demo using --groups=GROUP1,GROUP2,GROUPN and a type lambda that parses it?  and then ship that lambda.  make another file+class called PsapSmartTypes and huck them in there.

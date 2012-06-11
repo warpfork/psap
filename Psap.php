@@ -243,6 +243,14 @@ class PSAP {
 		return (@$str[0]=='-') ? (@$str[1]=='-') ? ($str!="--"? PSAP::$TLONG : PSAP::$TUNFLAG) : ($str!="-"? PSAP::$TSHORT : PSAP::$TUNFLAG) : PSAP::$TUNFLAG;
 	}
 	
+	public function success($treatWarningsAsFailure=true) {
+		foreach ($this->problems as $problem) {
+			if ($problem instanceof PsapParseError) return false;
+			if ($problem instanceof PsapParseWarn && treatWarningsAsFailure) return false;
+		}
+		return true;
+	}
+	
 	public function result() {
 		return $this->result;
 	}
