@@ -206,10 +206,10 @@ class PSAP {
 			{ $this->acceptParseProblem(new PsapParseError("a value given for ".$this->getPresentationName($key)." parameter is not a valid type (value:\"".$value."\")")); return false; }
 		// k, it's valid, now cast it...
 		if (!is_array($type)) switch ($type) {
-			case "int": $value = (int) $value;
-			case "num": $value = (float) $value;
-			case "bool": $value = TRUE;
-			case "string": $value = (string) $value;
+			case "int": $value = (int) $value; break;
+			case "num": $value = (float) $value; break;
+			case "bool": $value = TRUE; break;
+			case "string": $value = (string) $value; break;
 		}
 		// and put it in results.
 		if (!$this->config[$key]['multi'])
