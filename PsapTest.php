@@ -97,6 +97,32 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 		$parser = self::setupAlpha();
 		$parser->parse(array("-o", "val", "--option=splode"));
 	}
+	
+	private static function setupBeta() {
+		return new Psap(array(
+			'opt' => array(
+				'longname'	=> "option",
+				'shortname'	=> "o",
+				'type'		=> "int",
+			),
+		));
+	}
+	
+	public function testParseOneInt() {
+		$parser = self::setupBeta();
+		$parser->parse(array("-o1"));
+		$this->assertSame(
+			array("opt" => 1),
+			$parser->result()
+		);
+	}
+	
+	/** @expectedException PsapParseError
+	 */
+	public function testFailParseTypeWrong() {
+		$parser = self::setupBeta();
+		$parser->parse(array("-ostr"));
+	}
 }
 
 
