@@ -233,7 +233,7 @@ class PSAP {
 	private static function matchesType($type, $value) {
 		if (is_array($type)) return (array_search($value, $type) !== FALSE);
 		switch ($type) {
-			case "int": return ((int)$value==$value);	// is_int doesn't do the trick here, since we're certainly getting strings.
+			case "int": return is_numeric($value) && ((int)$value==$value);	// is_int doesn't do the trick here, since we're certainly getting strings.  and you need the is_numeric check in addition to the casting part because casting "asdf" to int will give you a zero.
 			case "num": return is_numeric($value);
 			case "bool": return ($value === TRUE);		// the "|| $value === FALSE" clause actually doesn't turn out to make sense, because a bool is true if present and null/unset if not present.
 			case "string": return is_string($value);
