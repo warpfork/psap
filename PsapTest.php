@@ -98,7 +98,7 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 		$parser->parse(array("-o", "val", "--option=splode"));
 	}
 	
-	private static function setupBeta() {
+	private static function setupTypeInt() {
 		return new Psap(array(
 			'opt' => array(
 				'longname'	=> "option",
@@ -109,7 +109,7 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testParseOneInt() {
-		$parser = self::setupBeta();
+		$parser = self::setupTypeInt();
 		$parser->parse(array("-o1"));
 		$this->assertSame(
 			array("opt" => 1),
@@ -119,8 +119,41 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 	
 	/** @expectedException PsapParseError
 	 */
-	public function testFailParseTypeWrong() {
-		$parser = self::setupBeta();
+	public function testFailParseIntTypeWrongString() {
+		$parser = self::setupTypeInt();
+		$parser->parse(array("-ostr"));
+	}
+	
+	/** @expectedException PsapParseError
+	 */
+	public function testFailParseIntTypeWrongNum() {
+		$parser = self::setupTypeInt();
+		$parser->parse(array("-o12.3"));
+	}
+	
+	private static function setupTypeBool() {
+		return new Psap(array(
+			'opt' => array(
+				'longname'	=> "option",
+				'shortname'	=> "o",
+				'type'		=> "bool",
+			),
+		));
+	}
+	
+	public function testParseOneBool() {
+		$parser = self::setupTypeInt();
+		$parser->parse(array("-o"));
+		$this->assertSame(
+			array("opt" => true),
+			$parser->result()
+		);
+	}
+	
+	/** @expectedException PsapParseError
+	 */
+	public function testFailParseBoolTypeWrongString() {
+		$parser = self::setupTypeInt();
 		$parser->parse(array("-ostr"));
 	}
 }
