@@ -156,6 +156,50 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 		$parser = self::setupTypeBool();
 		$parser->parse(array("-ostr"));
 	}
+	
+	/** @expectedException PsapConfigError
+	 */
+	public function testFailConfigInvalidOption() {
+		new Psap(array(
+			'opt' => array(
+				'longname'	=> "option",
+				'shortname'	=> "o",
+				'break'		=> "trap",
+			),
+		));
+	}
+	
+	/** @expectedException PsapConfigError
+	 */
+	public function testFailConfigUnnamedParameter() {
+		new Psap(array(
+			'opt' => array(
+				'type'		=> "bool",
+			),
+		));
+	}
+	
+	/** @expectedException PsapConfigError
+	 */
+	public function testFailConfigInvalidType() {
+		new Psap(array(
+			'opt' => array(
+				'shortname'	=> "o",
+				'type'		=> "wat",
+			),
+		));
+	}
+	
+	/** @expectedException PsapConfigError
+	 */
+	public function testFailConfigMistypedDefault() {
+		new Psap(array(
+			'opt' => array(
+				'shortname'	=> "o",
+				'default'	=> 12,
+			),
+		));
+	}
 }
 
 
