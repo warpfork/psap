@@ -5,7 +5,6 @@
 * you really should have that docname thinger option when you get around to generating usage strings
 * allow specifying nonstandard and zero wrap on getUsage.
 * parse error reporting
- * add a simple getErrorString() method 
  * actually, maybe catering to the common case would be better served by wrapping both getErrorString() and success() into a dieIfFailed method.  that could then also make sure the exit code is done correctly.
 * type lambdas
  * well, support them at all, first of all.

@@ -259,6 +259,13 @@ class PSAP {
 		return $this->problems;
 	}
 	
+	public function getErrorString() {
+		$complaint = "";
+		foreach ($this->getProblems() as $e)
+			$complaint .= "  - ".$e->getMessage()."\n";
+		return $complaint;
+	}
+	
 	public function getUsage() {
 		generateUsage();
 		return $this->usage;
