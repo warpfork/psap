@@ -76,6 +76,27 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 			$parser->result()
 		);
 	}
+	
+	/** @expectedException PsapParseWarn
+	 */
+	public function testFailParseOneShortStringTwice() {
+		$parser = self::setupAlpha();
+		$parser->parse(array("-oval", "-o=splode"));
+	}
+	
+	/** @expectedException PsapParseWarn
+	 */
+	public function testFailParseOneLongStringTwice() {
+		$parser = self::setupAlpha();
+		$parser->parse(array("--option", "val", "--option=splode"));
+	}
+	
+	/** @expectedException PsapParseWarn
+	 */
+	public function testFailParseOneMixedlenStringTwice() {
+		$parser = self::setupAlpha();
+		$parser->parse(array("-o", "val", "--option=splode"));
+	}
 }
 
 
