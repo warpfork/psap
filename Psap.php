@@ -100,7 +100,7 @@ class PSAP {
 	
 	private $throwParseError;
 	private $throwParseWarn;
-	var $config;
+	private $config;
 	private $lookupShort;
 	private $lookupLong;
 	private $unflaggedHead;
