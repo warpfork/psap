@@ -196,7 +196,7 @@ class PSAP {
 		// assert that required parameters have a value and rack up errors if they don't.
 		foreach ($this->config as $key => &$def)
 			if ($def['required'] && !isset($this->result[$key]))
-				acceptParseProblem(new PsapParseError("a value is required for ".$this->getPresentationName($key)." parameter but none was provided!"));
+				$this->acceptParseProblem(new PsapParseError("a value is required for ".$this->getPresentationName($key)." parameter but none was provided!"));
 	}
 	private function acceptValue($key, $value) {
 		$type = $this->config[$key]['type'];
