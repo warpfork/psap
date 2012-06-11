@@ -248,6 +248,30 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 			), $parser->result()
 		);
 	}
+	
+	public function testParseMulti() {
+		$parser = self::setupBeta();
+		$parser->parse(array("-gadmin", "-g=backup", "--groups", "users"));
+		$this->assertSame(
+			array(
+				"groups"	=> array("admin","backup","users"),
+				"username"	=> "root",	// note the issue of order here.  the groups array comes first because it was specified, while these other two values defaulted.  this isn't specified behavior, but it's something the testing framework will make you aware of.
+				"test"		=> false,
+			), $parser->result()
+		);
+	}
+	
+	public function testParseMultiEmpty() {
+		$parser = self::setupBeta();
+		$parser->parse(array("-gadmin", "-g=backup", "--groups"));
+		$this->assertSame(
+			array(
+				"groups"	=> array("admin","backup"),
+				"username"	=> "root",
+				"test"		=> false,
+			), $parser->result()
+		);
+	}
 }
 
 
