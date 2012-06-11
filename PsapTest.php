@@ -227,8 +227,6 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 	
 	public function testParseDefaults() {
 		$parser = self::setupBeta();
-		$parser->configureThrowOnParseError(false);
-		$parser->configureThrowOnParseWarn(false);
 		$parser->parse(array());
 		$this->assertSame(
 			array(
@@ -237,13 +235,10 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 				"test"		=> false,
 			), $parser->result()
 		);
-		//$this->assertSame(array(), $parser->getErrors());
 	}
 	
 	public function testParseDefaultOverriding() {
 		$parser = self::setupBeta();
-		$parser->configureThrowOnParseError(false);
-		$parser->configureThrowOnParseWarn(false);
 		$parser->parse(array("-uhash"));
 		$this->assertSame(
 			array(
@@ -252,7 +247,6 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 				"test"		=> false,
 			), $parser->result()
 		);
-		//$this->assertSame(array(), $parser->getErrors());
 	}
 }
 
