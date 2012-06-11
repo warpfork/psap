@@ -21,13 +21,6 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 		));
 	}
 	
-	public function testBasic() {
-		$parser = self::setupAlpha();
-		$parser->parse(array());
-		$parser->result();
-		$parser->getErrors();
-	}
-	
 	public function testParseOneShortSeparatedString() {
 		$parser = self::setupAlpha();
 		$parser->parse(array("-o", "val"));
@@ -96,6 +89,13 @@ class PsapTest extends PHPUnit_Framework_TestCase {
 	public function testFailParseOneMixedlenStringTwice() {
 		$parser = self::setupAlpha();
 		$parser->parse(array("-o", "val", "--option=splode"));
+	}
+	
+	/** @expectedException PsapParseError
+	 */
+	public function testFailParseMissingRequired() {
+		$parser = self::setupAlpha();
+		$parser->parse(array());
 	}
 	
 	private static function setupTypeInt() {
