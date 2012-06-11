@@ -193,7 +193,7 @@ class PSAP {
 		
 		// assert that all parameters have a value and rack up errors if they don't.
 		foreach ($this->config as $key => &$def)
-			if (!isset($this->result[$key]))
+			if (!array_key_exists($key, $this->result))
 				$this->acceptParseProblem(new PsapParseError("a value is required for ".$this->getPresentationName($key)." parameter but none was provided!"));
 	}
 	private function acceptValue($key, $value) {
